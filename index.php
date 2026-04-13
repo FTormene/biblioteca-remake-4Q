@@ -36,14 +36,17 @@
         </form>
         <?php
             // codice del login
+
+            // controllo che la pagina sia stata chiamata col metodo post e siano settati username e password
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($_POST["password"])) {
+                // salvo i valori di username e password in variabili per comodità
                 $username = $_POST["username"];
                 $password = $_POST["password"];
 
                 // connessione al DB
                 require_once("data/connessione_db.php");
 
-                // creazione della query
+                // creazione della query che prende l'utente con quelle credenziali
                 $myquery = "SELECT username, password 
                             FROM utenti 
                             WHERE username = '$username' AND password = '$password'";
@@ -52,9 +55,11 @@
                 $ris = $conn->query($myquery);
 
                 // verifico il risultato cioè se è presente un utente con quelle credenziali
+                // potrei scrivere if ($ris->num_rows == 1) tanto username è chiave primaria 
+                // e quindi non può esserci più di un utente con quello username
                 if ($ris->num_rows > 0) {
                     // se è presente allora l'utente è autenticato
-                    echo "<p>Login effettuato con successo!</p>"; // non lo vedrò mai
+                    echo "<p>Login effettuato con successo!</p>"; // non lo vedrò mai perchè poi faccio un redirect, ma lo metto per completezza
 
                     // carico lo username in sessione per poterlo usare nelle altre pagine
                     session_start();
@@ -63,7 +68,7 @@
                     // reindirizzo alla pagina principale
                     header("location: pagine/home.php");
                     $conn->close();
-                    exit(); // interrompo l'esecuzione del codice
+                    exit(); // interrompo l'esecuzione del codice visto che abbandono la pagina con il redirect
                 } else {
                     // altrimenti le credenziali sono errate
                     echo "<p>Username o password errati. Riprova.</p>";

@@ -1,7 +1,23 @@
+<!-- 
+    Questa pagina mostra la scheda di un libro, con tutte le informazioni che ho nel DB su quel libro,
+    è una cosa che nelle verifiche non chiedo, ma è interessante per mostrare come prendere un parametro 
+    dalla URL (cod_libro) e usarlo per fare una query al DB e mostrare le informazioni del libro corrispondente, 
+    e anche per mostrare come posso scrivere la descrizione del libro in un file markdown a parte e caricarla da lì, 
+    così da non dover scrivere tutto il testo della descrizione direttamente nel campo del DB, che sarebbe scomodo, 
+    soprattutto se la descrizione è lunga e ha anche formattazione (grassetto, elenchi puntati ecc), che con il markdown 
+    è molto più semplice da gestire.
+-->
+
 <?php
+    // controllo se la pagina è stata chiamata con il parametro cod_libro, 
+    // altrimenti non posso sapere quale libro mostrare, quindi mostro un messaggio 
+    // di errore e interrompo l'esecuzione del codice
     if (!isset($_GET["cod_libro"])) {
         die("Errore! manca un parametro essenziale per il caricamento del libro!");
-    } else {
+    } 
+    else {
+        // se il parametro è presente, lo salvo in una variabile e faccio una query al DB per prendere 
+        // tutte le informazioni del libro corrispondente a quel cod_libro
         $cod_libro = $_GET["cod_libro"];
         require("../data/connessione_db.php");
         $sql = "SELECT libri.cod_libro, libri.titolo, libri.copertina, libri.file_descrizione_md, libri.descrizione_txt, autori.nome, autori.cognome 
@@ -10,9 +26,12 @@
                 WHERE cod_libro=$cod_libro"; // qui non vanno le ' ' intorno a $cod_libro perchè è un numero
         $ris = $conn->query($sql) or die("<p>Query fallita!</p>");
         if ($ris->num_rows == 0) {
-            // decidere che cosa fare
+            // se il codice del libro non corrisponde a nessun libro nel DB, mostro un messaggio di errore 
+            // e interrompo l'esecuzione del codice
             die ("Libro non trovato!");
-        } else {
+        } 
+        else {
+            // salvo tutti i dati in variabili per poterli usare nel codice HTML più comodamente
             $riga = $ris->fetch_assoc();
             $titolo = $riga['titolo'];
             $file_descrizione_md = $riga['file_descrizione_md'];
@@ -44,30 +63,39 @@
                 echo "<img src='../immagini/$copertina' alt='$copertina'>";
             ?>
         </div>
-        <div class="descrizione">
+        <div class="descrizione"> <!-- div che contiene la descrizone del libro -->
             <?php
+                // la descrizione del libro può essere scritta in un file markdown a parte 
+                // oppure direttamente come testo (sempre in formato markdown) nel DB, 
+                // questo if controlla se nel db avevo il nome del file e lho messo 
+                // nella variabile $file_descrizione_md, se è presente allora carico la 
+                // descrizione da quel file, altrimenti la prendo dal campo descrizione_txt del DB
                 if ($file_descrizione_md) {
                     // carico un testo markdown da file
                     $myfile = fopen("../schede/ilsignoredeglianelli.md", "r") or die("Unable to open file!");
                     $testo = fread($myfile,filesize("../schede/ilsignoredeglianelli.md"));
                     fclose($myfile);
 
+                    // parsedown.php è una libreria, non scritta da me, che permette di convertire 
+                    // un testo scritto in markdown in HTML, così da poterlo mostrare formattato nella pagina, 
+                    // invece di mostrare il testo con i simboli del markdown (es. # per i titoli, * per il grassetto ecc)
                     include 'parsedown.php';
                     $Parsedown = new Parsedown();
                     echo $Parsedown->text($testo);
 
                 } else {
                     // questo codice va bene per dividere semplicemente il testo in paragrafi
+                    // va bene se non uso markdown ma solo testo semplice.
                     // $paragrafi = explode("\n", $descrizione_txt);
                     // foreach ($paragrafi as $paragrafo) {
                     //     echo "<p>$paragrafo</p>";
                     // }
                     // echo "$descrizione_txt";
 
+                    // versione con markdown, anche se la descrizione è scritta direttamente nel DB
                     include 'parsedown.php';
                     $Parsedown = new Parsedown();
                     echo $Parsedown->text($descrizione_txt);
-                    // echo "<p>ciao</p>";
                 }
 
             ?>

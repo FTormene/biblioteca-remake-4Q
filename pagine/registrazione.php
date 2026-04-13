@@ -1,4 +1,8 @@
 <?php
+    // carico tutti i valori dei campi del form, se esistono, altrimenti li inizializzo a stringa vuota
+    // così oltre ad averli già comodamente per il codice di registrazione, 
+    // li posso usare anche per reinserirli nel form in caso l'utente li abbia già inseriti ma ci sia stato un errore, 
+    // così non deve riscrivere tutto da capo quando la pagina si ricarica
     if(isset($_POST["username"])) {$username = $_POST["username"];} else {$username = "";}
 	if(isset($_POST["password"])) {$password = $_POST["password"];} else {$password = "";}
     if(isset($_POST["conferma"])) $conferma = $_POST["conferma"];  else $conferma = "";
@@ -8,7 +12,6 @@
     if(isset($_POST["telefono"])) $telefono = $_POST["telefono"];  else $telefono = "";
     if(isset($_POST["comune"])) $comune = $_POST["comune"];  else $comune = "";
     if(isset($_POST["indirizzo"])) $indirizzo = $_POST["indirizzo"];  else $indirizzo = "";
-
 ?>
 
 <!DOCTYPE html>
@@ -88,6 +91,7 @@
                         echo "Questo username è già stato usato";
                     } else {
 
+                        // query per inserire il nuovo utente nel DB, con i valori presi dal form
                         $myquery = "INSERT INTO utenti (username, password, nome, cognome, email, telefono, comune, indirizzo)
                                     VALUES ('$username', '$password', '$nome', '$cognome','$email','$telefono','$comune','$indirizzo')";
 
