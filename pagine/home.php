@@ -46,6 +46,7 @@
             <!-- qui devo mostrare l'elenco di tutti i libri presi in prestito, li metto come card contenente immagine, titolo autore e link alla scheda -->
             
             <?php
+                // query per pescare i dati dei libri presi in prestito
 				$sql = "SELECT libri.cod_libro, libri.titolo, libri.copertina, autori.nome, autori.cognome 
 						FROM libri JOIN autori ON libri.cod_autore = autori.cod_autore  
 						WHERE libri.username_utente='$username'";
@@ -53,11 +54,11 @@
 
                 // se non ci sono libri presi in prestito, mostro un messaggio e nessuna card
 				if ($ris->num_rows == 0) {
-					echo "<p style='text-align:center'>Nessuno";
+					echo "<p style='text-align:center'>Non hai preso in prestito nessun libro";
 				}
 
-                else {
-                    foreach($ris as $riga){
+                else { // ho trovato dei libri
+                    foreach($ris as $riga){ // in python sarebbe "for riga in ris"
                         $cod_libro = $riga['cod_libro']; // codlibro usato per aprire la scheda corrispondente
                         $titolo = $riga['titolo'];
                         $nome = $riga["nome"];
@@ -66,7 +67,7 @@
 
 
                         // con questo blocco crea la card, <<<EOD è una sintassi che permette di scrivere 
-                        // un blocco di testo senza dover fare l'escape dei caratteri speciali, e $variabile
+                        // un blocco di codice html su più righe, e $variabile
                         // viene interpretata come il suo valore
 
                         // nota che il link usa un parametro: cod_libro, che è l'identificativo del libro, 
