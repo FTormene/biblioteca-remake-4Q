@@ -2,6 +2,13 @@
     session_start();
     if(isset($_SESSION['username'])){
         header('location: pagine/home.php');
+        exit();
+    }
+
+    if (isset($_POST['username'])) {
+        $username = $_POST['username'];
+    } else {
+        $username = '';
     }
 ?>
 
@@ -25,7 +32,7 @@
             <table class="tab_input">
                 <tr>
                     <td><label for="username">Username: </label></td>
-                    <td><input type="text" name="username" id="username" value = "" required></td>
+                    <td><input type="text" name="username" id="username" value = "<?php echo $username; ?>" required></td>
                 </tr>
                 <tr>
                     <td><label for="password">Password: </label></td>
@@ -38,7 +45,7 @@
             // codice del login
 
             // controllo che la pagina sia stata chiamata col metodo post e siano settati username e password
-            if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["username"]) && isset($_POST["password"])) {
+            if (/*$_SERVER["REQUEST_METHOD"] == "POST" && */isset($_POST["username"]) && isset($_POST["password"])) {
                 // salvo i valori di username e password in variabili per comodità
                 $username = $_POST["username"];
                 $password = $_POST["password"];
