@@ -64,7 +64,7 @@
                 // verifico il risultato cioè se è presente un utente con quelle credenziali
                 // potrei scrivere if ($ris->num_rows == 1) tanto username è chiave primaria 
                 // e quindi non può esserci più di un utente con quello username
-                if ($ris->num_rows > 0) {
+                if ($ris->num_rows > 0) { // potevo mettere == 1
                     // se è presente allora l'utente è autenticato
                     echo "<p>Login effettuato con successo!</p>"; // non lo vedrò mai perchè poi faccio un redirect, ma lo metto per completezza
 

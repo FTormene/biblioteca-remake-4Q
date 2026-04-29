@@ -53,11 +53,11 @@
                 </tr>
                 <tr>
                     <td><label for="email">Email: </label></td>
-                    <td><input type="text" name="email" id="email" <?php echo "value = '$email'" ?>></td>
+                    <td><input type="email" name="email" id="email" <?php echo "value = '$email'" ?>></td>
                 </tr>
                 <tr>
                     <td><label for="telefono">Telefono: </label></td>
-                    <td><input type="text" name="telefono" id="telefono" <?php echo "value = '$telefono'" ?>></td>
+                    <td><input type="tel" name="telefono" id="telefono" <?php echo "value = '$telefono'" ?>></td>
                 </tr>
                 <tr>
                     <td><label for="comune">Comune: </label></td>
@@ -71,8 +71,8 @@
             <input type="submit" value="Invia">
         </form>
 
-        <p>
-            <?php
+        
+        <?php
             if(isset($_POST["username"]) and isset($_POST["password"])) {
                 if ($_POST["username"] == "" or $_POST["password"] == "") {
                     echo "username e password non possono essere vuoti!";
@@ -81,6 +81,7 @@
                 } else {
                     require_once("../data/connessione_db.php");
 
+                    // query per controllare se il nomeutente dato esiste già
                     $myquery = "SELECT username 
 						        FROM utenti 
 						        WHERE username='$username'";
@@ -88,7 +89,7 @@
 
                     $ris = $conn->query($myquery) or die("<p>Query fallita!</p>");
                     if ($ris->num_rows > 0) {
-                        echo "Questo username è già stato usato";
+                        echo "<p>Questo username è già stato usato</p>";
                     } else {
 
                         // query per inserire il nuovo utente nel DB, con i valori presi dal form
@@ -112,16 +113,17 @@
                             
 						    $conn->close();
 
-                            echo "Registrazione effettuata con successo!<br>sarai ridirezionato alla home tra 5 secondi.";
+                            echo "<p>Registrazione effettuata con successo!<br>sarai ridirezionato alla home tra 5 secondi.</p>";
                             header('Refresh: 5; URL=home.php');
 
                         } else {
-                            echo "Non è stato possibile effettuare la registrazione per il seguente motivo: " . $conn->error;
+                            echo "<p>Non è stato possibile effettuare la registrazione per il seguente motivo: " . $conn->error;
+                            echo "</p>";
                         }
                     }
                 }
             }
-            ?>
+        ?>
         </p>
         <?php 
             require('footer.php');

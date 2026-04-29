@@ -5,6 +5,7 @@
     // se l'utente non è loggato, lo reindirizzo alla pagina di login
     if(!isset($_SESSION['username'])){ 
 		header('location: ../index.php');
+        exit();
 	}
     // memorizzo lo username dell'utente loggato in una variabile
     $username = $_SESSION["username"];
@@ -21,7 +22,7 @@
         $riga = $ris->fetch_assoc();
         $nome = $riga["nome"];
         $cognome = $riga["cognome"];
-    }
+    } 
 
 ?>
     
@@ -54,10 +55,11 @@
 
                 // se non ci sono libri presi in prestito, mostro un messaggio e nessuna card
 				if ($ris->num_rows == 0) {
-					echo "<p style='text-align:center'>Non hai preso in prestito nessun libro";
+					echo "<p style='text-align:center'>Non hai preso in prestito nessun libro</p>";
 				}
 
                 else { // ho trovato dei libri
+                    // while ($riga = $ris->fetch_assoc()) { // ciclo su tutte le righe del risultato, ogni riga è un libro
                     foreach($ris as $riga){ // in python sarebbe "for riga in ris"
                         $cod_libro = $riga['cod_libro']; // codlibro usato per aprire la scheda corrispondente
                         $titolo = $riga['titolo'];

@@ -112,7 +112,7 @@
                     else {
                         echo "<p>Non ho trovato nessun libro che rispetti i valori indicati</p>";
                     }
-                    echo "</table>";
+                    
                 }
 
             ?>
